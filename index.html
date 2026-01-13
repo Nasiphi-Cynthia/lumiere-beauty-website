@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMIÈRE | Glow Collection</title>
+    <style>
+        :root {
+            --primary-pink: #fce4ec;
+            --button-pink: #b5838d;
+            --text-gold: #a67c52;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Playfair Display', serif; }
+        body { background-color: var(--primary-pink); color: #333; transition: 0.3s; }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 10%; background: white; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 24px; letter-spacing: 5px; color: var(--text-gold); font-weight: bold; cursor: pointer; }
+        .nav-links { list-style: none; display: flex; gap: 25px; }
+        .nav-links li { cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links li:hover { color: var(--button-pink); }
+
+        /* Page Management */
+        .page { display: none; padding: 60px 10%; animation: fadeIn 0.5s ease; }
+        .active-page { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Home/Hero Section */
+        .hero {
+            height: 70vh; background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+            url('https://images.unsplash.com/photo-1522337363553-5605d930dec5?auto=format&fit=crop&q=80&w=1500') center/cover;
+            display: flex; align-items: center; justify-content: center; color: white; border-radius: 15px; margin-bottom: 40px;
+        }
+
+        /* Product Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: white; padding: 25px; border-radius: 15px; text-align: center; }
+        .card img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+        .add-btn { background: var(--button-pink); color: white; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; margin-top: 10px; }
+
+        /* About & Locations Styling */
+        .content-box { background: white; padding: 50px; border-radius: 20px; line-height: 1.8; text-align: center; }
+        .map-placeholder { background: #eee; height: 300px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="showPage('home')">LUMIÈRE</div>
+        <ul class="nav-links">
+            <li onclick="showPage('home')">Home</li>
+            <li onclick="showPage('about')">About</li>
+            <li onclick="showPage('shop')">Shop</li>
+            <li onclick="showPage('locations')">Locations</li>
+        </ul>
+        <div id="cart">BAG (<span id="count">0</span>)</div>
+    </nav>
+
+    <section id="home" class="page active-page">
+        <div class="hero">
+            <div style="text-align: center;">
+                <h1 style="font-size: 60px;">The High-Shine Era</h1>
+                <button class="add-btn" style="width: auto; padding: 15px 40px;" onclick="showPage('shop')">Discover the Collection</button>
+            </div>
+        </div>
+        <div class="content-box">
+            <h2>Radiance in every swipe.</h2>
+            <p>Experience the fusion of clinical lip care and high-fashion aesthetics.</p>
+        </div>
+    </section>
+
+    <section id="about" class="page">
+        <div class="content-box">
+            <h1>Our Story</h1>
+            <p>Lumière was born in Cape Town with a vision to redefine lip hydration. We believe in "Craft and Code"—using scientific formulation with a creative, cinematic aesthetic. Our glosses are 100% Vegan, Cruelty-Free, and Paraben-Free.</p>
+        </div>
+    </section>
+
+    <section id="shop" class="page">
+        <h2 style="text-align: center; margin-bottom: 40px;">Shop All Glosses</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?auto=format&fit=crop&q=80&w=500">
+                <h3>Bubblegum Pink</h3>
+                <p>R220</p>
+                <button class="add-btn" onclick="addToCart()">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1599733594230-6b823276abcc?auto=format&fit=crop&q=80&w=500">
+                <h3>Mauve Shimmer</h3>
+                <p>R220</p>
+                <button class="add-btn" onclick="addToCart()">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1571646034647-52e6ea84b28c?auto=format&fit=crop&q=80&w=500">
+                <h3>Clear Glaze</h3>
+                <p>R180</p>
+                <button class="add-btn" onclick="addToCart()">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="locations" class="page">
+        <div class="content-box">
+            <h1>Find Us</h1>
+            <p>Visit our flagship boutique in the V&A Waterfront, Cape Town.</p>
+            <div class="map-placeholder">
+                <p>[ Google Maps Integration: V&A Waterfront, Cape Town ]</p>
+            </div>
+            <p style="margin-top: 20px;">Open Daily: 9 AM - 9 PM</p>
+        </div>
+    </section>
+
+    <script>
+        // FUNCTIONAL LOGIC
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active-page'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active-page');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        let cartCount = 0;
+        function addToCart() {
+            cartCount++;
+            document.getElementById('count').innerText = cartCount;
+            alert("Lumière Item added to bag!");
+        }
+    </script>
+</body>
+</html>
